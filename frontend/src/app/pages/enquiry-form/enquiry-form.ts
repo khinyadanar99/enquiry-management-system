@@ -34,7 +34,7 @@ export class EnquiryForm {
 		this.enquiryForm = this.fb.group({
 			full_name: ['', Validators.required],
 			email: ['', [Validators.required, Validators.email]],
-			phone: [''],
+			phone_number: [''],
 			service: ['', Validators.required],
 			description: ['', Validators.required]
 		});
@@ -54,7 +54,6 @@ export class EnquiryForm {
 				this.successMessage = 'Your enquiry has been submitted successfully.';
       			this.errorMessage = '';
 				this.enquiryForm.reset();
-
 				
 			},
 
