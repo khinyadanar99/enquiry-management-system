@@ -1,0 +1,154 @@
+ <div class="w-7xl mx-auto my-10">  
+    <h1 class="text-4xl font-bold text-center">Enquiry Management</h1>
+
+    <div class="toolbar">
+        <input
+        type="text"
+        [value]="searchTerm()"
+        (input)="searchTerm.set($any($event.target).value)"
+        placeholder="Search by name">
+
+        <select
+            [value]="selectedService()"
+            (change)="selectedService.set($any($event.target).value)">
+
+            <option value="">All Services</option>
+            @for(service of services; track service) {
+                <option [value]="service">
+                {{ service }}
+                </option>
+            }
+        </select>
+
+        <select
+            [value]="selectedStatus()"
+            (change)="selectedStatus.set($any($event.target).value)">
+            <option value="">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Reviewed">Reviewed</option>
+        </select>
+    </div>
+
+    <p class="text-gray-500 text-sm mb-3">
+        Total enquiries: {{ filteredEnquiries().length }} 
+    </p>
+
+    <table>
+
+        <thead>
+            <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Service</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            @if(filteredEnquiries().length === 0){
+
+                <tr class="text-center">
+                    <td colspan="7">No enquiry found</td>
+                </tr>
+
+            }
+
+            @for(enquiry of filteredEnquiries(); track enquiry.id) {
+
+            <tr [style.background-color]="enquiry.status === 'Reviewed' ? '#f3f4f6' : '#ffffff'">
+
+                <td>{{ enquiry.full_name }}</td>
+
+                <td><a href= "mailto:{{enquiry.email}}" class="underline">{{ enquiry.email }}</a></td>
+
+                <td>{{ enquiry.phone_number || '-' }}</td>
+
+                <td>{{ enquiry.service }}</td>
+
+                <td>{{ enquiry.created_at | date:'short' }}</td>
+
+                <td class="text-center">
+
+                    <select
+                    class="status-select"
+                    [class.status-pending]="enquiry.status === 'Pending'"
+                    [class.status-reviewed]="enquiry.status === 'Reviewed'"
+                    [value]="enquiry.status || 'pending'"
+                    (change)="updateStatus(
+                    enquiry,
+                    $any($event.target).value
+                    )">
+                    <option value="Pending">Pending</option>
+                    <option value="Reviewed">Reviewed</option>
+
+                </select>
+
+                </td>
+
+                <td class="text-center">
+
+                <button class="border bg-blue-500 text-white px-10 py-3 rounded-xl"
+                    (click)="viewDetails(enquiry)">
+                    View
+                </button>
+
+                </td>
+
+            </tr>
+
+            }
+
+        </tbody>
+
+    </table>
+</div>
+
+@if(selectedEnquiry(); as selected){
+
+    <div class="modal-backdrop" (click)="closeModal()">
+
+        <div class="modal-content" (click)="$event.stopPropagation()">
+
+            <div class="modal-header">
+                <h2 class="text-center font-bold text-2xl">Enquiry Details</h2>
+
+                <button
+                    class="close-btn"
+                    (click)="closeModal()">
+                    ✕
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <dl class="details-grid">
+                    <dt>Name</dt>
+                    <dd>{{ selected.full_name }}</dd>
+
+                    <dt>Email</dt>
+                    <dd>{{ selected.email }}</dd>
+
+                    <dt>Phone</dt>
+                    <dd>{{ selected.phone_number ?? '-' }}</dd>
+
+                    <dt>Service</dt>
+                    <dd>{{ selected.service }}</dd>
+
+                    <dt>Status</dt>
+                    <dd>{{ selected.status }}</dd>
+
+                    <dt>Description</dt>
+                    <dd>{{ selected.description }}</dd>
+                </dl>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+}
