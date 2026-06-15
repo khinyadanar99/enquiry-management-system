@@ -13,6 +13,8 @@ export class Admin implements OnInit {
 
 	enquiries = signal<any[]>([]);
 
+	loading = true;
+
 	selectedEnquiry = signal<any | null>(null);
 
 	searchTerm = signal('');
@@ -56,9 +58,11 @@ export class Admin implements OnInit {
 		this.enquiryService.getEnquiries().subscribe({
 			next: (data: any) => {
 				this.enquiries.set(data);
+				this.loading = false;
 			},
 			error: (error) => {
 				console.error(error);
+				this.loading = false;
 			}
 		});
   	}

@@ -47,8 +47,13 @@
             </tr>
         </thead>
 
-        <tbody>
-
+        <tbody *ngIf="loading">
+            <tr class="text-center">
+                    <td colspan="7">Loading enquiries ... </td>
+                </tr>
+        </tbody>
+        <tbody *ngIf="!loading" >
+            
             @if(filteredEnquiries().length === 0){
 
                 <tr class="text-center">
@@ -59,49 +64,49 @@
 
             @for(enquiry of filteredEnquiries(); track enquiry.id) {
 
-            <tr [style.background-color]="enquiry.status === 'Reviewed' ? '#f3f4f6' : '#ffffff'">
+                <tr [style.background-color]="enquiry.status === 'Reviewed' ? '#f3f4f6' : '#ffffff'">
 
-                <td>{{ enquiry.full_name }}</td>
+                    <td>{{ enquiry.full_name }}</td>
 
-                <td><a href= "mailto:{{enquiry.email}}" class="underline">{{ enquiry.email }}</a></td>
+                    <td><a href= "mailto:{{enquiry.email}}" class="underline">{{ enquiry.email }}</a></td>
 
-                <td class="text-center">{{ enquiry.phone_number || '-'}}</td>
+                    <td class="text-center">{{ enquiry.phone_number || '-'}}</td>
 
-                <td>{{ enquiry.service }}</td>
+                    <td>{{ enquiry.service }}</td>
 
-                <td>{{ enquiry.created_at | date:'short' }}</td>
+                    <td>{{ enquiry.created_at | date:'short' }}</td>
 
-                <td class="text-center">
+                    <td class="text-center">
 
-                    <select
-                    class="status-select"
-                    [class.status-pending]="enquiry.status === 'Pending'"
-                    [class.status-reviewed]="enquiry.status === 'Reviewed'"
-                    [value]="enquiry.status || 'pending'"
-                    (change)="updateStatus(
-                    enquiry,
-                    $any($event.target).value
-                    )">
-                    <option value="Pending">Pending</option>
-                    <option value="Reviewed">Reviewed</option>
+                        <select
+                        class="status-select"
+                        [class.status-pending]="enquiry.status === 'Pending'"
+                        [class.status-reviewed]="enquiry.status === 'Reviewed'"
+                        [value]="enquiry.status || 'pending'"
+                        (change)="updateStatus(
+                        enquiry,
+                        $any($event.target).value
+                        )">
+                        <option value="Pending">Pending</option>
+                        <option value="Reviewed">Reviewed</option>
 
-                </select>
+                    </select>
 
-                </td>
+                    </td>
 
-                <td class="text-center">
+                    <td class="text-center">
 
-                <button class="border bg-blue-500 text-white px-10 py-3 rounded-xl"
-                    (click)="viewDetails(enquiry)">
-                    View
-                </button>
+                    <button class="border bg-blue-500 text-white px-10 py-3 rounded-xl"
+                        (click)="viewDetails(enquiry)">
+                        View
+                    </button>
 
-                </td>
+                    </td>
 
-            </tr>
+                </tr>
 
             }
-
+            
         </tbody>
 
     </table>
@@ -149,6 +154,5 @@
         </div>
 
     </div>
-
 
 }
